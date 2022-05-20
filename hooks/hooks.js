@@ -20,7 +20,7 @@ export function useInterval(callback, delay = 10000) {
   }, [delay])
 }
 
-export function useData(refreshInterval = 5000) {
+export function CreateCustomer(refreshInterval = 5000) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [hash, setHash] = useState(null)
@@ -42,6 +42,59 @@ export function useData(refreshInterval = 5000) {
         if (nextHash !== hash) {
           setLoading(true)
           fetch('http://localhost:3500/yampi/create-customer')
+            .then(response => {
+              if (response.status === 200) {
+                return response.json()
+              } else {
+                console.log(error)
+              }
+
+              return response
+                .json()
+                .then(error => Promise.reject(new Error(error.message)))
+            })
+            .then(data => {
+              console.info('sucess')
+              console.info('changed hash [%s=>%s]', hash, nextHash)
+              setHash(nextHash)
+              setPayload(data)
+            })
+            .catch(setError)
+            .finally(() => setLoading(false))
+        }
+      })
+      .catch(setError)
+  }, refreshInterval)
+
+  return {
+    hash,
+    loading,
+    payload
+  }
+}
+
+export function OrderStatus(refreshInterval = 5000) {
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [hash, setHash] = useState(null)
+  const [payload, setPayload] = useState({})
+
+  useInterval(() => {
+    setError(null)
+    fetch('http://localhost:3500/yampi/order/hash')
+      .then(response => {
+        if (response.status === 200) {
+          return response.json()
+        }
+
+        return response
+          .json()
+          .then(error => Promise.reject(new Error(error.message)))
+      })
+      .then(nextHash => {
+        if (nextHash !== hash) {
+          setLoading(true)
+          fetch('http://localhost:3500/yampi/order')
             .then(response => {
               if (response.status === 200) {
                 return response.json()

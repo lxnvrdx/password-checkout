@@ -1,26 +1,28 @@
 import React from 'react'
 import { Container, Col, Row } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useData } from '../hooks/hooks'
+import { CreateCustomer } from '../hooks/hooks'
 import { CircleNotch } from "phosphor-react";
 import './index.css'
 import { Formik } from 'formik';
 import { SendData} from './SendData'
-import Obrigado from './Obrigado'
 function App() {
-  const data = useData()
-  const customer = data?.payload?.resource
- 
+  const data = CreateCustomer()
+  let customer = data?.payload?.resource
+  if(customer === undefined){
+  customer = data?.payload
+  }
+
 
   if(data.loading){
     return(
     <div className='container'>
-
     <CircleNotch weight="bold" className="animate-spin" />
     </div>
     )
   } 
- 
+
+
   return (
     <Container className='d-flex justify-content-center flex-column gap-2 col-12'>
     <h1 className='text-dark'>{`Olá, ${customer.first_name}! Vamos criar sua conta?`}</h1>
@@ -40,7 +42,7 @@ function App() {
        onSubmit={(values, { setSubmitting }) => {
          SendData(values)
          setTimeout(() => {
-          window.location.href = "http://proenem.com.br"
+          window.location.href = "/IsStudent"
          }, 500);
 
        }}
