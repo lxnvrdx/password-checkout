@@ -19,109 +19,124 @@ export function useInterval(callback, delay = 10000) {
     }
   }, [delay])
 }
-
-export function CreateCustomer(refreshInterval = 5000) {
+export function CreateCustomer() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [hash, setHash] = useState(null)
-  const [payload, setPayload] = useState({})
 
-  useInterval(() => {
+  const [payload, setPayload] = useState({})
+  // useInterval(() => {
+  useEffect(() => {
     setError(null)
-    fetch('http://localhost:3500/yampi/create-customer/hash')
+    setLoading(true)
+    fetch(
+      'https://tarjas-prodigio-default-rtdb.firebaseio.com/create_customer/.json?print=pretty'
+    )
       .then(response => {
         if (response.status === 200) {
           return response.json()
+        } else {
+          console.log(error)
         }
 
         return response
           .json()
           .then(error => Promise.reject(new Error(error.message)))
       })
-      .then(nextHash => {
-        if (nextHash !== hash) {
-          setLoading(true)
-          fetch('http://localhost:3500/yampi/create-customer')
-            .then(response => {
-              if (response.status === 200) {
-                return response.json()
-              } else {
-                console.log(error)
-              }
-
-              return response
-                .json()
-                .then(error => Promise.reject(new Error(error.message)))
-            })
-            .then(data => {
-              console.info('sucess')
-              console.info('changed hash [%s=>%s]', hash, nextHash)
-              setHash(nextHash)
-              setPayload(data)
-            })
-            .catch(setError)
-            .finally(() => setLoading(false))
-        }
+      .then(data => {
+        console.info('sucess')
+        setPayload(data)
       })
       .catch(setError)
-  }, refreshInterval)
-
+      .finally(() => setLoading(false))
+  }, {})
+  // }, 10000)
   return {
-    hash,
     loading,
     payload
   }
 }
 
-export function OrderStatus(refreshInterval = 5000) {
+export function getOrderStatus() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [hash, setHash] = useState(null)
   const [payload, setPayload] = useState({})
 
-  useInterval(() => {
-    setError(null)
-    fetch('http://localhost:3500/yampi/order/hash')
-      .then(response => {
-        if (response.status === 200) {
-          return response.json()
-        }
+  useEffect(
+    () => {
+      setError(null)
+      setLoading(true)
+      fetch(
+        'https://tarjas-prodigio-default-rtdb.firebaseio.com/order/resource/status/data/id.json?print=pretty'
+      )
+        .then(response => {
+          if (response.status === 200) {
+            return response.json()
+          } else {
+            console.log(error)
+          }
 
-        return response
-          .json()
-          .then(error => Promise.reject(new Error(error.message)))
-      })
-      .then(nextHash => {
-        if (nextHash !== hash) {
-          setLoading(true)
-          fetch('http://localhost:3500/yampi/order')
-            .then(response => {
-              if (response.status === 200) {
-                return response.json()
-              } else {
-                console.log(error)
-              }
-
-              return response
-                .json()
-                .then(error => Promise.reject(new Error(error.message)))
-            })
-            .then(data => {
-              console.info('sucess')
-              console.info('changed hash [%s=>%s]', hash, nextHash)
-              setHash(nextHash)
-              setPayload(data)
-            })
-            .catch(setError)
-            .finally(() => setLoading(false))
-        }
-      })
-      .catch(setError)
-  }, refreshInterval)
+          return response
+            .json()
+            .then(error => Promise.reject(new Error(error.message)))
+        })
+        .then(data => {
+          console.info('sucess')
+          setPayload(data)
+        })
+        .catch(setError)
+        .finally(() => setLoading(false))
+    },
+    { payload }
+  )
 
   return {
-    hash,
     loading,
     payload
   }
+}
+
+export function SendData(request) {
+  var myHeaders = new Headers()
+  myHeaders.append('Content-Type', 'application/json')
+
+  var raw = JSON.stringify({
+    ...request
+  })
+
+  var requestOptions = {
+    method: 'PUT',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+  }
+
+  fetch(
+    'https://tarjas-prodigio-default-rtdb.firebaseio.com/create_customer/.json?print=pretty',
+    requestOptions
+  )
+    .then(response => response.text())
+    .then(result => console.log(result))
+    .catch(error => console.log('error', error))
+}
+
+export function setOrderStatus(status) {
+  var myHeaders = new Headers()
+  myHeaders.append('Content-Type', 'application/json')
+
+  var raw = JSON.stringify(status)
+
+  var requestOptions = {
+    method: 'PUT',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+  }
+
+  fetch(
+    'https://tarjas-prodigio-default-rtdb.firebaseio.com/create_customer/payment.json?print=pretty',
+    requestOptions
+  )
+    .then(response => response.text())
+    .then(result => console.log(result))
+    .catch(error => console.log('error', error))
 }
