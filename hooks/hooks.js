@@ -61,34 +61,32 @@ export function getOrderStatus() {
   const [error, setError] = useState(null)
   const [payload, setPayload] = useState({})
 
-  useEffect(
-    () => {
-      setError(null)
-      setLoading(true)
-      fetch(
-        'https://tarjas-prodigio-default-rtdb.firebaseio.com/order/resource/status/data/id.json?print=pretty'
-      )
-        .then(response => {
-          if (response.status === 200) {
-            return response.json()
-          } else {
-            console.log(error)
-          }
+  // useEffect(() => {
+  useInterval(() => {
+    setError(null)
+    setLoading(true)
+    fetch(
+      'https://tarjas-prodigio-default-rtdb.firebaseio.com/order/resource/status/data/id.json?print=pretty'
+    )
+      .then(response => {
+        if (response.status === 200) {
+          return response.json()
+        } else {
+          console.log(error)
+        }
 
-          return response
-            .json()
-            .then(error => Promise.reject(new Error(error.message)))
-        })
-        .then(data => {
-          console.info('sucess')
-          setPayload(data)
-        })
-        .catch(setError)
-        .finally(() => setLoading(false))
-    },
-    { payload }
-  )
-
+        return response
+          .json()
+          .then(error => Promise.reject(new Error(error.message)))
+      })
+      .then(data => {
+        console.info('sucess')
+        setPayload(data)
+      })
+      .catch(setError)
+      .finally(() => setLoading(false))
+    // }, payload)
+  }, 10000)
   return {
     loading,
     payload
