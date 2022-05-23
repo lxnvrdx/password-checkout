@@ -28,9 +28,7 @@ export function CreateCustomer() {
   useEffect(() => {
     setError(null)
     setLoading(true)
-    fetch(
-      'https://tarjas-prodigio-default-rtdb.firebaseio.com/create_customer/.json?print=pretty'
-    )
+    fetch('https://simuladordetran.com.br/yampi/create-customer')
       .then(response => {
         if (response.status === 200) {
           return response.json()
@@ -65,9 +63,7 @@ export function getOrderStatus() {
   useInterval(() => {
     setError(null)
     setLoading(true)
-    fetch(
-      'https://tarjas-prodigio-default-rtdb.firebaseio.com/order/resource/status/data/id.json?print=pretty'
-    )
+    fetch('https://simuladordetran.com.br/yampi/order')
       .then(response => {
         if (response.status === 200) {
           return response.json()
@@ -93,25 +89,21 @@ export function getOrderStatus() {
   }
 }
 
-export function SendData(request) {
+export function CreateStudent(student) {
   var myHeaders = new Headers()
   myHeaders.append('Content-Type', 'application/json')
-
   var raw = JSON.stringify({
-    ...request
+    student
   })
 
   var requestOptions = {
-    method: 'PUT',
+    method: 'POST',
     headers: myHeaders,
     body: raw,
     redirect: 'follow'
   }
 
-  fetch(
-    'https://tarjas-prodigio-default-rtdb.firebaseio.com/create_customer/.json?print=pretty',
-    requestOptions
-  )
+  fetch('https://simuladordetran.com.br/yampi/create-student', requestOptions)
     .then(response => response.text())
     .then(result => console.log(result))
     .catch(error => console.log('error', error))
@@ -130,10 +122,7 @@ export function setOrderStatus(status) {
     redirect: 'follow'
   }
 
-  fetch(
-    'https://tarjas-prodigio-default-rtdb.firebaseio.com/create_customer/payment.json?print=pretty',
-    requestOptions
-  )
+  fetch('https://simuladordetran.com.br/yampi/create-student', requestOptions)
     .then(response => response.text())
     .then(result => console.log(result))
     .catch(error => console.log('error', error))

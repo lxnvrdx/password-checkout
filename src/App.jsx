@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Container, Col, Row } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { CreateCustomer, SendData } from '../hooks/hooks'
+import { CreateCustomer, CreateStudent } from '../hooks/hooks'
 import { CircleNotch } from "phosphor-react";
 import './index.css'
 import { Formik } from 'formik';
@@ -9,7 +9,9 @@ import logo from '../content/logoproenembranco.png'
 function App() {
    
     const data = CreateCustomer()
-
+  
+  
+  
   let customer = data?.payload?.resource
 
   if(customer === undefined){
@@ -47,7 +49,7 @@ if(data.loading){
          return errors;
        }}
        onSubmit={(values) => {
-         SendData(values)
+        CreateStudent(values)
           setTimeout(() => {
            window.location.href = "/IsStudent"
           }, 1000);

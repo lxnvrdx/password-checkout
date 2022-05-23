@@ -9,8 +9,8 @@ import logo from '../content/logoproenembranco.png'
 
 
 function IsStudent() {
-  const orderStatus = getOrderStatus()
-  
+  const orderData = getOrderStatus()
+  let orderStatus = orderData?.payload?.resource?.status?.data?.id
   const data = CreateCustomer()
   
   let customer = data?.payload?.resource
@@ -26,18 +26,17 @@ function IsStudent() {
     )
   } 
 
-  if(orderStatus?.payload !== 4){
+  if(orderStatus !== 4){
     return( 
       <Container>
           <Row className='d-flex flex-column '>
-         
           <Col className='d-flex flex-column justify-content-start' >
         <p className='text-center fs-4 fw-light'>{`${customer?.first_name}, Parece que seu pagamento não foi efetivado! Aguarde o email de confirmação.`}</p>
         </Col>
         </Row>
       </Container>
       );
-}
+}else{
     setOrderStatus(true)
     return(
       <Container>
@@ -51,7 +50,7 @@ function IsStudent() {
         </Row>
       </Container>
     )
-  }
+  }}
 
 
 
