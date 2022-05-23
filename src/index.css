@@ -9,6 +9,19 @@ body {
   margin: auto;
   height: 100vh;
 }
+
+.videoplayer {
+  width: 600px;
+  height: 350px;
+}
+
+@media screen and (max-width: 700px) {
+  .videoplayer {
+    width: 100%;
+    height: 200px;
+  }
+}
+
 .animate-spin {
   margin: auto;
   width: 100px;
