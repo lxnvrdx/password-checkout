@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react';
+import React,{useEffect, useState} from 'react';
 import { CreateCustomer, getOrderStatus, setOrderStatus,   } from '../hooks/hooks'
 import { CircleNotch } from "phosphor-react";
 import { Container, Col, Row } from 'react-bootstrap';
@@ -9,12 +9,12 @@ import logo from '../content/logoproenembranco.png'
 
 
 function IsStudent() {
-
   let orderData = getOrderStatus()
   let orderStatus = orderData?.payload?.resource?.status?.data?.id
   let orderName = orderData?.payload?.resource?.status?.data?.name
-  let customer = orderData?.payload?.resource?.customer?.data 
-    setOrderStatus(orderName)
+  let customer = orderData?.payload?.resource?.customer?.data
+
+
 
   if(orderData.loading){
     return(
@@ -23,6 +23,8 @@ function IsStudent() {
     </div>
     )
   } 
+  if(orderName !== undefined){
+    setOrderStatus(orderName)
 
   if(orderStatus !== 4){
     return( 
@@ -48,8 +50,12 @@ if(orderStatus === 4){
         </Row>
       </Container>
     )
+  }}else{
+    return(
+      <div className='container'>
+      <CircleNotch weight="bold" className="animate-spin" />
+      </div>
+      )
   }}
-
-
 
 export default IsStudent;

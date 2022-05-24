@@ -20,35 +20,52 @@ export function useInterval(callback, delay = 10000) {
   }, [delay])
 }
 
-export function CreateCustomer() {
+export function CreateCustomer(refreshInterval = 5000) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-
+  const [hash, setHash] = useState(null)
   const [payload, setPayload] = useState({})
-  // useInterval(() => {
-  useEffect(() => {
+
+  useInterval(() => {
     setError(null)
-    setLoading(true)
-    fetch('https://simuladordetran.com.br/yampi/create-customer')
+    fetch('https://simuladordetran.com.br/yampi/create-customer/hash')
       .then(response => {
         if (response.status === 200) {
           return response.json()
-        } else {
-          console.log(error)
         }
 
         return response
           .json()
           .then(error => Promise.reject(new Error(error.message)))
       })
-      .then(data => {
-        console.info('sucess')
-        setPayload(data)
+      .then(nextHash => {
+        if (nextHash !== hash) {
+          setLoading(true)
+          fetch('https://simuladordetran.com.br/yampi/create-customer')
+            .then(response => {
+              if (response.status === 200) {
+                return response.json()
+              } else {
+                console.log(error)
+              }
+
+              return response
+                .json()
+                .then(error => Promise.reject(new Error(error.message)))
+            })
+            .then(data => {
+              console.info('sucess')
+              console.info('changed hash [%s=>%s]', hash, nextHash)
+              setHash(nextHash)
+              setPayload(data)
+            })
+            .catch(setError)
+            .finally(() => setLoading(false))
+        }
       })
       .catch(setError)
-      .finally(() => setLoading(false))
-  }, {})
-  // }, 10000)
+  }, refreshInterval)
+
   return {
     loading,
     payload
@@ -75,39 +92,55 @@ export function CreateStudent(student) {
     requestOptions
   )
     .then(response => response.text())
-    .then(result => console.log(result))
+    .then(result => console.log(`Dados Enviados: ${result}`))
     .catch(error => console.log('error', error))
 }
 
-export function getOrderStatus() {
+export function getOrderStatus(refreshInterval = 5000) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [hash, setHash] = useState(null)
   const [payload, setPayload] = useState({})
 
-  // useEffect(() => {
   useInterval(() => {
     setError(null)
-    setLoading(true)
-    fetch('https://simuladordetran.com.br/yampi/order')
+    fetch('https://simuladordetran.com.br/yampi/order/hash')
       .then(response => {
         if (response.status === 200) {
           return response.json()
-        } else {
-          console.log(error)
         }
 
         return response
           .json()
           .then(error => Promise.reject(new Error(error.message)))
       })
-      .then(data => {
-        console.info('sucess')
-        setPayload(data)
+      .then(nextHash => {
+        if (nextHash !== hash) {
+          setLoading(true)
+          fetch('https://simuladordetran.com.br/yampi/order')
+            .then(response => {
+              if (response.status === 200) {
+                return response.json()
+              } else {
+                console.log(error)
+              }
+
+              return response
+                .json()
+                .then(error => Promise.reject(new Error(error.message)))
+            })
+            .then(data => {
+              console.info('sucess')
+              console.info('changed hash [%s=>%s]', hash, nextHash)
+              setHash(nextHash)
+              setPayload(data)
+            })
+            .catch(setError)
+            .finally(() => setLoading(false))
+        }
       })
       .catch(setError)
-      .finally(() => setLoading(false))
-    // }, payload)
-  }, 10000)
+  }, refreshInterval)
   return {
     loading,
     payload
@@ -132,6 +165,6 @@ export function setOrderStatus(status) {
     requestOptions
   )
     .then(response => response.text())
-    .then(result => console.log(`result: ${result}`))
+    .then(result => console.log(`Status Pagamento: ${result}`))
     .catch(error => console.log('error', error))
 }

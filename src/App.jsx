@@ -42,12 +42,10 @@ function App() {
          return errors;
        }}
        onSubmit={(values) => {
-         setTimeout(() => {
-        CreateStudent(values)
-          }, 2000);
+          CreateStudent(values)
           setTimeout(() => {
-           window.location.href = "/IsStudent"
-          }, 6000);
+             window.location.href = "/IsStudent"
+          }, 3000);
 
        }}
      >
