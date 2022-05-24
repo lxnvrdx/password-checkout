@@ -10,8 +10,8 @@ function App() {
   let orderData = getOrderStatus()
   let customer = orderData?.payload?.resource?.customer?.data 
   let paymentStatus = orderData?.payload?.resource?.status?.data?.name
-  console.log(paymentStatus)
-if(orderData.loading){
+
+  if(orderData.loading){
     return(
     <div className='container'>
     <CircleNotch weight="bold" className="animate-spin" />

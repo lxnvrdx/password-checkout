@@ -132,6 +132,6 @@ export function setOrderStatus(status) {
     requestOptions
   )
     .then(response => response.text())
-    .then(result => console.log(result))
+    .then(result => console.log(`result: ${result}`))
     .catch(error => console.log('error', error))
 }

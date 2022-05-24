@@ -9,16 +9,13 @@ import logo from '../content/logoproenembranco.png'
 
 
 function IsStudent() {
-  const orderData = getOrderStatus()
+
+  let orderData = getOrderStatus()
   let orderStatus = orderData?.payload?.resource?.status?.data?.id
   let orderName = orderData?.payload?.resource?.status?.data?.name
-  const data = CreateCustomer()
-  
-  let customer = data?.payload?.resource
-  if(customer === undefined){
-  customer = data?.payload
-  }
- 
+  let customer = orderData?.payload?.resource?.customer?.data 
+    setOrderStatus(orderName)
+
   if(orderData.loading){
     return(
     <div className='container'>
@@ -28,7 +25,6 @@ function IsStudent() {
   } 
 
   if(orderStatus !== 4){
-    setOrderStatus(orderName)
     return( 
       <Container>
           <Row className='d-flex flex-column '>
@@ -36,10 +32,10 @@ function IsStudent() {
         <p className='text-center fs-4 fw-light'>{`${customer?.first_name}, Parece que seu pagamento não foi efetivado! Aguarde o email de confirmação.`}</p>
         </Col>
         </Row>
-      </Container>
+      </Container> 
       );
-}else{
-    setOrderStatus(orderName)
+}
+if(orderStatus === 4){
     return(
       <Container>
         <Row style={{ width:'100%', height:'80vh'}} className="d-flex flex-column justify-content-center">
