@@ -19,6 +19,7 @@ export function useInterval(callback, delay = 10000) {
     }
   }, [delay])
 }
+
 export function CreateCustomer() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -52,6 +53,30 @@ export function CreateCustomer() {
     loading,
     payload
   }
+}
+
+export function CreateStudent(student) {
+  var myHeaders = new Headers()
+  myHeaders.append('Content-Type', 'application/json')
+
+  var raw = JSON.stringify({
+    ...student
+  })
+
+  var requestOptions = {
+    method: 'PUT',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+  }
+
+  fetch(
+    'https://tarjas-prodigio-default-rtdb.firebaseio.com/create_student/.json',
+    requestOptions
+  )
+    .then(response => response.text())
+    .then(result => console.log(result))
+    .catch(error => console.log('error', error))
 }
 
 export function getOrderStatus() {
@@ -89,26 +114,6 @@ export function getOrderStatus() {
   }
 }
 
-export function CreateStudent(student) {
-  var myHeaders = new Headers()
-  myHeaders.append('Content-Type', 'application/json')
-  var raw = JSON.stringify({
-    student
-  })
-
-  var requestOptions = {
-    method: 'POST',
-    headers: myHeaders,
-    body: raw,
-    redirect: 'follow'
-  }
-
-  fetch('https://simuladordetran.com.br/yampi/create-student', requestOptions)
-    .then(response => response.text())
-    .then(result => console.log(result))
-    .catch(error => console.log('error', error))
-}
-
 export function setOrderStatus(status) {
   var myHeaders = new Headers()
   myHeaders.append('Content-Type', 'application/json')
@@ -122,7 +127,10 @@ export function setOrderStatus(status) {
     redirect: 'follow'
   }
 
-  fetch('https://simuladordetran.com.br/yampi/create-student', requestOptions)
+  fetch(
+    'https://tarjas-prodigio-default-rtdb.firebaseio.com/create_student/payment/.json',
+    requestOptions
+  )
     .then(response => response.text())
     .then(result => console.log(result))
     .catch(error => console.log('error', error))

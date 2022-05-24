@@ -1,24 +1,17 @@
 import React, { useState } from 'react'
 import { Container, Col, Row } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { CreateCustomer, CreateStudent } from '../hooks/hooks'
+import { CreateCustomer,getOrderStatus, CreateStudent } from '../hooks/hooks'
 import { CircleNotch } from "phosphor-react";
 import './index.css'
 import { Formik } from 'formik';
 import logo from '../content/logoproenembranco.png'
 function App() {
-   
-    const data = CreateCustomer()
-  
-  
-  
-  let customer = data?.payload?.resource
-
-  if(customer === undefined){
-  customer = data?.payload
-  }
-
-if(data.loading){
+  let orderData = getOrderStatus()
+  let customer = orderData?.payload?.resource?.customer?.data 
+  let paymentStatus = orderData?.payload?.resource?.status?.data?.name
+  console.log(paymentStatus)
+if(orderData.loading){
     return(
     <div className='container'>
     <CircleNotch weight="bold" className="animate-spin" />
@@ -26,7 +19,7 @@ if(data.loading){
     )
   } 
 
-
+  
   return (
     <Container className='d-flex justify-content-center flex-column gap-2 col-12'>
       <Col className='col-3'>
@@ -35,7 +28,7 @@ if(data.loading){
       </Col>
     <h1 className='text-white-70 mb-4'>{`Olá, ${customer.first_name}! Vamos criar sua conta?`}</h1>
     <Formik
-       initialValues={{ email:customer.email, password: '',passwordConfirmation: '', first_name:customer.first_name, cpf: customer.cpf, id:customer.id, payment: false }}
+       initialValues={{ email:customer.email, password: '',passwordConfirmation: '', first_name:customer.first_name, cpf: customer.cpf, id:customer.id, payment: paymentStatus }}
        validate={values => {
          const errors = {};
          if (!values.password && !values.passwordConfirmation) {
@@ -49,10 +42,12 @@ if(data.loading){
          return errors;
        }}
        onSubmit={(values) => {
+         setTimeout(() => {
         CreateStudent(values)
+          }, 2000);
           setTimeout(() => {
            window.location.href = "/IsStudent"
-          }, 1000);
+          }, 6000);
 
        }}
      >

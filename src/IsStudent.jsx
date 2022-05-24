@@ -11,6 +11,7 @@ import logo from '../content/logoproenembranco.png'
 function IsStudent() {
   const orderData = getOrderStatus()
   let orderStatus = orderData?.payload?.resource?.status?.data?.id
+  let orderName = orderData?.payload?.resource?.status?.data?.name
   const data = CreateCustomer()
   
   let customer = data?.payload?.resource
@@ -18,7 +19,7 @@ function IsStudent() {
   customer = data?.payload
   }
  
-  if(data.loading){
+  if(orderData.loading){
     return(
     <div className='container'>
     <CircleNotch weight="bold" className="animate-spin" />
@@ -27,6 +28,7 @@ function IsStudent() {
   } 
 
   if(orderStatus !== 4){
+    setOrderStatus(orderName)
     return( 
       <Container>
           <Row className='d-flex flex-column '>
@@ -37,7 +39,7 @@ function IsStudent() {
       </Container>
       );
 }else{
-    setOrderStatus(true)
+    setOrderStatus(orderName)
     return(
       <Container>
         <Row style={{ width:'100%', height:'80vh'}} className="d-flex flex-column justify-content-center">
